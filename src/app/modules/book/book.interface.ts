@@ -8,7 +8,8 @@ export type IBook = {
   categoryId: string;
 };
 export type IBookFilterRequest = {
-  title?: string | undefined;
-  author?: string | undefined;
-  genre?: string | undefined;
+  searchTerm?: string | undefined;
+  minPrice?: number | undefined;
+  maxPrice?: number | undefined;
+  category?: string | undefined;
 };
