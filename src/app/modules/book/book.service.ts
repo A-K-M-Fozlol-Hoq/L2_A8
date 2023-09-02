@@ -1,23 +1,9 @@
-import { Category, Prisma, Book as PrismaBook } from '@prisma/client';
+import { Prisma, Book as PrismaBook } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 import { IBook, IBookFilterRequest } from './book.interface';
 
 // Function to map a PrismaBook to an IBook
-const mapPrismaBookToIBook = async (
-  book: PrismaBook,
-  prisma: any
-): Promise<IBook> => {
-  // Fetch the associated category
-  const category: Category | null = await prisma.category.findUnique({
-    where: {
-      id: book.categoryId,
-    },
-  });
-
-  if (!category) {
-    throw new Error('Category not found');
-  }
-
+const mapPrismaBookToIBook = async (book: PrismaBook): Promise<IBook> => {
   return {
     id: book.id,
     title: book.title,
@@ -26,10 +12,6 @@ const mapPrismaBookToIBook = async (
     price: book.price,
     publicationDate: book.publicationDate.toISOString(),
     categoryId: book.categoryId,
-    // category: {
-    //   id: category.id,
-    //   title: category.title,
-    // },
   };
 };
 
@@ -37,7 +19,7 @@ const createBook = async (book: IBook): Promise<IBook> => {
   const result = await prisma.book.create({
     data: book,
   });
-  return mapPrismaBookToIBook(result, prisma);
+  return mapPrismaBookToIBook(result);
 };
 
 const getAllBooks = async (filters: IBookFilterRequest): Promise<IBook[]> => {
@@ -72,7 +54,7 @@ const getAllBooks = async (filters: IBookFilterRequest): Promise<IBook[]> => {
     },
   });
 
-  return Promise.all(books.map(book => mapPrismaBookToIBook(book, prisma)));
+  return Promise.all(books.map(book => mapPrismaBookToIBook(book)));
 };
 
 const getBooksByCategoryId = async (
@@ -91,7 +73,7 @@ const getBooksByCategoryId = async (
     },
   });
 
-  return Promise.all(books.map(book => mapPrismaBookToIBook(book, prisma)));
+  return Promise.all(books.map(book => mapPrismaBookToIBook(book)));
 };
 
 const getBookById = async (id: string): Promise<IBook | null> => {
@@ -108,7 +90,7 @@ const getBookById = async (id: string): Promise<IBook | null> => {
     return null;
   }
 
-  return mapPrismaBookToIBook(book, prisma);
+  return mapPrismaBookToIBook(book);
 };
 
 const updateBook = async (
@@ -129,7 +111,7 @@ const updateBook = async (
     return null;
   }
 
-  return mapPrismaBookToIBook(book, prisma);
+  return mapPrismaBookToIBook(book);
 };
 
 const deleteBook = async (id: string): Promise<IBook | null> => {
@@ -146,7 +128,7 @@ const deleteBook = async (id: string): Promise<IBook | null> => {
     return null;
   }
 
-  return mapPrismaBookToIBook(book, prisma);
+  return mapPrismaBookToIBook(book);
 };
 
 export const BookService = {
