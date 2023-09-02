@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\Learning\\level2\\assignments\\assignment-08\\logs\\winston\\errors\\.15a4424b3d0f94a86d5c9d660e921e43228a4854-audit.json",
+    "files": [
+        {
+            "date": 1693538812488,
+            "name": "D:\\Learning\\level2\\assignments\\assignment-08\\logs\\winston\\errors\\phu-2023-01-09-09-error.log",
+            "hash": "5a2899bf12e7d00d8f7d83eb1010aed36e7422a6a80efcc9005f16293bd0906b"
+        },
+        {
+            "date": 1693653877629,
+            "name": "D:\\Learning\\level2\\assignments\\assignment-08\\logs\\winston\\errors\\phu-2023-02-09-17-error.log",
+            "hash": "d510b6199b19b1b75c855ccf710959e57500c90cb99197524b2fbf1bee8f9282"
+        },
+        {
+            "date": 1693656660184,
+            "name": "D:\\Learning\\level2\\assignments\\assignment-08\\logs\\winston\\errors\\phu-2023-02-09-18-error.log",
+            "hash": "43577c53b9b33c686b857a3a2c3b17ab8d08e676cded9671084724c4930bbaa4"
+        },
+        {
+            "date": 1693659637881,
+            "name": "D:\\Learning\\level2\\assignments\\assignment-08\\logs\\winston\\errors\\phu-2023-02-09-19-error.log",
+            "hash": "16346df3b9a681d342823377a066752d2eaa87d65977d6dafd1baed2aadb7582"
+        }
+    ],
+    "hashType": "sha256"
+}
