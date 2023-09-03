@@ -1,4 +1,4 @@
-import { Prisma, Book as PrismaBook } from '@prisma/client';
+import { Book, Book as PrismaBook } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -16,97 +16,69 @@ const createBook = async (book: IBook): Promise<IBook> => {
 const getAllBooks = async (
   filters: IBookFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<IBook[]>> => {
-  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
-  const { searchTerm, ...filterData } = filters;
+): Promise<IGenericResponse<Book[]>> => {
+  const { page, size, skip } = paginationHelpers.calculatePagination(options);
+
+  const { search, minPrice, maxPrice, category } = filters;
 
   const andConditions = [];
 
-  if (searchTerm) {
+  if (search) {
     andConditions.push({
       OR: bookSearchableFields.map(field => ({
         [field]: {
-          contains: searchTerm,
+          contains: search,
           mode: 'insensitive',
         },
       })),
     });
   }
 
-  if (Object.keys(filterData).length > 0) {
+  if (minPrice !== undefined) {
     andConditions.push({
-      AND: Object.keys(filterData).map(key => ({
-        [key]: {
-          equals: (filterData as any)[key],
-        },
-      })),
+      price: {
+        gte: parseInt(minPrice),
+      },
     });
   }
 
-  const whereConditions: Prisma.BookWhereInput =
-    andConditions.length > 0 ? { AND: andConditions } : {};
+  if (maxPrice !== undefined) {
+    andConditions.push({
+      price: {
+        lte: parseInt(maxPrice),
+      },
+    });
+  }
 
-  // if (title) {
-  //   whereConditions.title = {
-  //     contains: title,
-  //     mode: 'insensitive',
-  //   };
-  // }
+  if (category !== undefined) {
+    andConditions.push({
+      categoryId: category,
+    });
+  }
 
-  // if (author) {
-  //   whereConditions.author = {
-  //     contains: author,
-  //     mode: 'insensitive',
-  //   };
-  // }
+  const whereCondition = andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // if (genre) {
-  //   whereConditions.genre = {
-  //     contains: genre,
-  //     mode: 'insensitive',
-  //   };
-  // }
-
-  // if (minPrice !== undefined && maxPrice !== undefined) {
-  //   whereConditions.price = {
-  //     gte: minPrice,
-  //     lte: maxPrice,
-  //   };
-  // } else if (minPrice !== undefined) {
-  //   whereConditions.price = {
-  //     gte: minPrice,
-  //   };
-  // } else if (maxPrice !== undefined) {
-  //   whereConditions.price = {
-  //     lte: maxPrice,
-  //   };
-  // }
-
-  // if (category) {
-  //   whereConditions.categoryId = category;
-  // }
-
-  const books: PrismaBook[] = await prisma.book.findMany({
-    where: whereConditions,
+  const result = await prisma.book.findMany({
+    where: whereCondition,
     skip,
-    take: limit,
+    take: size,
     orderBy:
       options.sortBy && options.sortOrder
-        ? { [options.sortBy]: options.sortOrder }
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
         : {},
   });
 
-  const total = await prisma.book.count({
-    where: whereConditions,
-  });
+  const total = await prisma.book.count();
 
   return {
     meta: {
-      total,
       page,
-      limit,
+      size,
+      total,
     },
-    data: books,
+    data: result,
   };
 };
 

@@ -7,9 +7,10 @@ export type IBook = {
   publicationDate: string;
   categoryId: string;
 };
+
 export type IBookFilterRequest = {
-  searchTerm?: string | undefined;
-  minPrice?: number | undefined;
-  maxPrice?: number | undefined;
-  category?: string | undefined;
+  search?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  category?: string;
 };
