@@ -1,27 +1,19 @@
-import { Prisma } from '@prisma/client';
+import { Order } from '@prisma/client';
 import prisma from '../../../shared/prisma';
-import { IOrder, IOrderedBook } from './order.interface';
+import { IOrder } from './order.interface';
 
 export const createOrder = async (
   userId: string,
-  orderedBooks: IOrderedBook[]
-): Promise<IOrder> => {
-  const orderData: Prisma.OrderCreateInput = {
-    user: {
-      connect: { id: userId }, // Assuming your User model has an 'id' field
-    },
-    orderedBooks: {
-      create: orderedBooks,
-    },
-    status: 'pending',
-  };
-  const order = await prisma.order.create({
-    data: orderData,
-    include: {
-      orderedBooks: true,
+  orderedBooks: Order[]
+): Promise<Order> => {
+  const result = await prisma.order.create({
+    data: {
+      userId,
+      orderedBooks: orderedBooks,
     },
   });
-  return order;
+
+  return result;
 };
 
 export const getAllOrders = async (): Promise<IOrder[]> => {

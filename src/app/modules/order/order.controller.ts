@@ -3,9 +3,8 @@ import { OrderService } from './order.service';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.userId; // Extract user id from token
-    const orderedBooks = req.body.orderedBooks;
-    const order = await OrderService.createOrder(userId, orderedBooks);
+    const userId = req.user?.userId;
+    const order = await OrderService.createOrder(userId, req.body);
     res.status(200).json({
       success: true,
       statusCode: 200,

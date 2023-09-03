@@ -8,7 +8,7 @@ const router = express.Router();
 // Create Order
 router.post(
   '/create-order',
-  auth(ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.CUSTOMER),
   OrderController.createOrder
 );
 
@@ -22,4 +22,4 @@ router.get(
   OrderController.getOrdersForUser
 );
 
-export default router;
+export const orderRouter = router;
