@@ -12,14 +12,18 @@ router.post(
   OrderController.createOrder
 );
 
-// Get All Orders (Admin Only)
-router.get('/', auth(ENUM_USER_ROLE.ADMIN), OrderController.getAllOrders);
+// Get All Orders (Admin can view all order, cusomer can view his all orders at same endpoint)
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
+  OrderController.getAllOrders
+);
 
 // Get Orders for User (Customer Only)
 router.get(
-  '/user-orders',
-  auth(ENUM_USER_ROLE.CUSTOMER),
-  OrderController.getOrdersForUser
+  '/:orderId',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
+  OrderController.getOrderById
 );
 
 export const orderRouter = router;

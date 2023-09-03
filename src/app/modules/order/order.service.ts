@@ -33,18 +33,19 @@ const getAllOrders = async (
   if (role === 'admin') {
     result = await prisma.order.findMany({});
   }
+  console.log(role, result);
 
   return result;
 };
 
 const getOrderById = async (
-  id: string,
+  orderId: string,
   userId: string,
   role: string
 ): Promise<Order | null> => {
   const result = await prisma.order.findUnique({
     where: {
-      id,
+      id: orderId,
     },
   });
 

@@ -23,7 +23,10 @@ const createOrder = async (req: Request, res: Response) => {
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const orders = await OrderService.getAllOrders();
+    const orders = await OrderService.getAllOrders(
+      req.user?.userId,
+      req.user?.role
+    );
     res.status(200).json({
       success: true,
       statusCode: 200,
@@ -40,10 +43,12 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
-const getOrdersForUser = async (req: Request, res: Response) => {
+const getOrderById = async (req: Request, res: Response) => {
   try {
+    const orderId = req.params.orderId;
     const userId = req.user?.userId; // Extract user id from token
-    const orders = await OrderService.getOrdersForUser(userId);
+    const role = req.user?.role; // Extract user id from token
+    const orders = await OrderService.getOrderById(orderId, userId, role);
     res.status(200).json({
       success: true,
       statusCode: 200,
@@ -63,5 +68,5 @@ const getOrdersForUser = async (req: Request, res: Response) => {
 export const OrderController = {
   createOrder,
   getAllOrders,
-  getOrdersForUser,
+  getOrderById,
 };
